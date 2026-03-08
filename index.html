@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Malta kelionės planas</title>
+  <style>
+    :root{
+      --bg:#f3f6fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:#e2e8f0;
+      --accent:#2563eb;
+      --accent2:#0ea5e9;
+      --ok:#16a34a;
+      --warn:#dc2626;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#eaf2ff 0%, #f8fbff 120px, var(--bg) 280px);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:860px;margin:0 auto;padding:0 14px 28px}
+    .hero{
+      padding:22px 6px 10px;
+      color:var(--text);
+    }
+    .hero-card{
+      background:linear-gradient(135deg,#0f172a,#1d4ed8 60%, #0ea5e9);
+      color:#fff;
+      border-radius:24px;
+      padding:22px 18px 18px;
+      box-shadow:var(--shadow);
+    }
+    .eyebrow{font-size:13px;opacity:.9;letter-spacing:.2px}
+    h1{margin:8px 0 8px;font-size:30px;line-height:1.05}
+    .sub{font-size:15px;line-height:1.45;opacity:.96}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .chip{
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.18);
+      padding:8px 10px;border-radius:999px;font-size:13px
+    }
+    .top-actions{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px
+    }
+    .btn{
+      display:flex;align-items:center;justify-content:center;
+      gap:8px;
+      padding:14px 14px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:15px;
+      border:1px solid transparent;
+    }
+    .btn-primary{background:#fff;color:#0f172a}
+    .btn-ghost{background:rgba(255,255,255,.10);color:#fff;border-color:rgba(255,255,255,.18)}
+    .notice{
+      margin:14px 0 0;
+      background:#fff8e7;color:#7c2d12;border:1px solid #fde68a;
+      border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45
+    }
+    .section-title{
+      display:flex;align-items:center;justify-content:space-between;
+      margin:22px 4px 10px;font-size:21px;font-weight:800
+    }
+    .section-sub{font-size:13px;color:var(--muted);font-weight:600}
+    .card{
+      background:var(--card);
+      border:1px solid rgba(148,163,184,.16);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .quick-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px
+    }
+    .mini{
+      padding:14px;
+    }
+    .mini h3{margin:0 0 8px;font-size:16px}
+    .mini p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+    .toolbar{
+      position:sticky;top:0;z-index:30;
+      backdrop-filter: blur(10px);
+      background:rgba(243,246,251,.88);
+      padding:10px 0 10px;margin:6px 0 8px;border-bottom:1px solid rgba(148,163,184,.12)
+    }
+    .nav{
+      display:flex;gap:8px;overflow:auto;padding-bottom:2px
+    }
+    .nav a{
+      white-space:nowrap;
+      text-decoration:none;
+      background:#fff;
+      border:1px solid var(--line);
+      color:#0f172a;
+      padding:10px 12px;border-radius:999px;font-size:13px;font-weight:700
+    }
+    .day{
+      margin-top:14px;
+      padding:16px;
+    }
+    .day-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .day-head h2{margin:0;font-size:22px}
+    .day-meta{font-size:13px;color:var(--muted);font-weight:700;text-align:right}
+    .timeline{position:relative;margin-top:14px}
+    .stop{
+      position:relative;padding:0 0 16px 18px;margin-left:8px
+    }
+    .stop:not(:last-child){border-left:2px solid #dbeafe}
+    .dot{
+      position:absolute;left:-8px;top:2px;width:14px;height:14px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 0 0 4px #eff6ff
+    }
+    .time{font-size:13px;font-weight:800;color:#1d4ed8;margin-bottom:6px}
+    .place{font-size:18px;font-weight:800;margin-bottom:4px}
+    .desc{font-size:14px;line-height:1.5;color:var(--muted)}
+    .badges{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+    .badge{
+      font-size:12px;font-weight:800;border-radius:999px;padding:7px 10px;
+      background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe
+    }
+    .badge.drone{background:#ecfdf5;color:#166534;border-color:#bbf7d0}
+    .badge.warn{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .mapbtn,.ghostbtn{
+      text-decoration:none;font-size:14px;font-weight:800;
+      padding:11px 12px;border-radius:12px;display:inline-flex;align-items:center;gap:8px
+    }
+    .mapbtn{background:var(--accent);color:#fff}
+    .ghostbtn{background:#fff;border:1px solid var(--line);color:#0f172a}
+    details{
+      margin-top:10px;border-top:1px dashed #cbd5e1;padding-top:10px
+    }
+    summary{cursor:pointer;font-weight:800;color:#0f172a}
+    .small{font-size:13px;color:var(--muted);line-height:1.5}
+    .footer{
+      margin-top:18px;
+      font-size:13px;color:var(--muted);text-align:center;padding:10px
+    }
+    .list{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.55}
+    .routebox{padding:16px}
+    .routebox ol{margin:10px 0 0 18px;color:var(--muted);line-height:1.6}
+    .install{
+      margin-top:10px;font-size:13px;color:#dbeafe;line-height:1.5
+    }
+    @media (min-width:700px){
+      .top-actions{grid-template-columns:repeat(4,1fr)}
+      .quick-grid{grid-template-columns:repeat(4,1fr)}
+    }
+  </style>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Malta planas">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Kelionės mini app telefonui</div>
+        <h1>Malta kelionės planas</h1>
+        <div class="sub">Vietų pavadinimai palikti anglų kalba, visa kita – lietuviškai. Paspaudi mygtuką ir iš karto atsidaro Google Maps.</div>
+        <div class="chips">
+          <div class="chip">📅 Kovo 8–10</div>
+          <div class="chip">🏨 115 The Strand Hotel by NEU Collective</div>
+          <div class="chip">🎥 Drono spotai įtraukti</div>
+          <div class="chip">🚕 Bolt + ⛴️ ferry</div>
+        </div>
+        <div class="top-actions">
+          <a class="btn btn-primary" href="https://maps.google.com/?q=115+The+Strand+Hotel+Gzira" target="_blank" rel="noopener">🏨 Viešbutis</a>
+          <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&origin=115+The+Strand+Hotel+Gzira&destination=Dingli+Cliffs+Malta&waypoints=Manoel+Island+Malta|Sliema+Ferry+Terminal|Valletta+Malta|St+Peter%27s+Pool+Marsaxlokk|Mdina+Malta" target="_blank" rel="noopener">🗺️ Visas maršrutas</a>
+          <a class="btn btn-ghost" href="#day2">⚡ Pagrindinė diena</a>
+          <a class="btn btn-ghost" href="#tips">ℹ️ Patarimai</a>
+        </div>
+        <div class="install">iPhone: Safari → Share → Add to Home Screen. Android: Chrome → Add to Home Screen.</div>
+      </div>
+      <div class="notice">Svarbiausia diena yra <b>kovo 9</b>. Drono vietos suplanuotos pagal geriausią šviesą: <b>Manoel Island</b> saulėtekiui, <b>St Peter's Pool</b> popietei, <b>Dingli Cliffs</b> saulėlydžiui.</div>
+    </div>
+
+    <div class="toolbar">
+      <div class="nav">
+        <a href="#overview">Greita santrauka</a>
+        <a href="#day1">Kovo 8</a>
+        <a href="#day2">Kovo 9</a>
+        <a href="#day3">Kovo 10</a>
+        <a href="#tips">Dronas</a>
+        <a href="#food">Vakarienė</a>
+      </div>
+    </div>
+
+    <div id="overview" class="section-title">
+      <span>Greita santrauka</span>
+      <span class="section-sub">viskas vienoje vietoje</span>
+    </div>
+    <div class="quick-grid">
+      <div class="card mini">
+        <h3>🌅 Saulėtekis</h3>
+        <p><b>Manoel Island</b><br>06:40–07:20</p>
+      </div>
+      <div class="card mini">
+        <h3>🏛️ Miestas</h3>
+        <p><b>Valletta</b><br>10:00–13:00</p>
+      </div>
+      <div class="card mini">
+        <h3>🎥 Top spotas</h3>
+        <p><b>St Peter's Pool</b><br>15:30–16:30</p>
+      </div>
+      <div class="card mini">
+        <h3>🌇 Saulėlydis</h3>
+        <p><b>Dingli Cliffs</b><br>18:00–18:40</p>
+      </div>
+    </div>
+
+    <div class="card routebox" style="margin-top:10px">
+      <b>Maršruto eilė:</b>
+      <ol>
+        <li>115 The Strand Hotel by NEU Collective</li>
+        <li>Manoel Island</li>
+        <li>Sliema Ferry Terminal</li>
+        <li>Valletta + Upper Barrakka Gardens</li>
+        <li>St Peter's Pool</li>
+        <li>Mdina</li>
+        <li>Dingli Cliffs</li>
+        <li>Grįžimas į Gżira / Sliema</li>
+      </ol>
+      <div class="actions">
+        <a class="mapbtn" href="https://www.google.com/maps/dir/?api=1&origin=115+The+Strand+Hotel+Gzira&destination=Dingli+Cliffs+Malta&waypoints=Manoel+Island+Malta|Sliema+Ferry+Terminal|Valletta+Malta|St+Peter%27s+Pool+Marsaxlokk|Mdina+Malta" target="_blank" rel="noopener">Atidaryti visą maršrutą</a>
+      </div>
+    </div>
+
+    <div id="day1" class="section-title">
+      <span>Kovo 8 – atvykimas</span>
+      <span class="section-sub">lengvas vakaras</span>
+    </div>
+    <div class="card day">
+      <div class="day-head">
+        <h2>Atvykimo planas</h2>
+        <div class="day-meta">Atskrendi 18:50</div>
+      </div>
+      <div class="timeline">
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">18:50</div>
+          <div class="place">Malta International Airport</div>
+          <div class="desc">Nusileidimas. Realistiškai iš oro uosto išeisi apie 19:30–20:00.</div>
+          <div class="badges">
+            <span class="badge">Bolt ~18–22 €</span>
+            <span class="badge">~20 min</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Malta+International+Airport" target="_blank" rel="noopener">Oro uostas</a>
+            <a class="ghostbtn" href="https://maps.google.com/?q=115+The+Strand+Hotel+Gzira" target="_blank" rel="noopener">Viešbutis</a>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">20:30–21:00</div>
+          <div class="place">Check-in + vakarinis pasivaikščiojimas</div>
+          <div class="desc">Trumpas pasivaikščiojimas pakrante. Jei dar turėsi jėgų – nueik iki <b>Manoel Island</b> dėl gražaus vakarinio Valletta vaizdo.</div>
+          <div class="badges">
+            <span class="badge drone">Telefono / drono kadrai</span>
+            <span class="badge">5–7 min pėsčiomis</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Manoel+Island+Malta" target="_blank" rel="noopener">Manoel Island</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="day2" class="section-title">
+      <span>Kovo 9 – pagrindinė diena</span>
+      <span class="section-sub">pilnas maršrutas</span>
+    </div>
+    <div class="card day">
+      <div class="day-head">
+        <h2>Diena su drono spotais</h2>
+        <div class="day-meta">Svarbiausia kelionės diena</div>
+      </div>
+      <div class="timeline">
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">06:40–07:20</div>
+          <div class="place">Manoel Island</div>
+          <div class="desc">Saulėtekio kadrai su <b>Valletta skyline</b>. Viena geriausių vietų arti viešbučio.</div>
+          <div class="badges">
+            <span class="badge drone">Drono spotas</span>
+            <span class="badge">Auksinė šviesa</span>
+            <span class="badge">5–7 min pėsčiomis</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Manoel+Island+Malta" target="_blank" rel="noopener">Atidaryti vietą</a>
+          </div>
+          <details>
+            <summary>Ką filmuoti</summary>
+            <div class="small">Reveal į Valletta, lėtas orbit aplink pakrantę, žemas praskridimas virš vandens tik jei saugu ir nėra žmonių.</div>
+          </details>
+        </div>
+
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">09:30</div>
+          <div class="place">Sliema Ferry Terminal → Valletta</div>
+          <div class="desc">Paliekam keltą į Valletta, nes iš tavo vietos tai paprasčiausias variantas.</div>
+          <div class="badges">
+            <span class="badge">Ferry ~2.80–3 €</span>
+            <span class="badge">~10 min</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Sliema+Ferry+Terminal" target="_blank" rel="noopener">Ferry terminalas</a>
+            <a class="ghostbtn" href="https://maps.google.com/?q=Valletta+Malta" target="_blank" rel="noopener">Valletta</a>
+          </div>
+          <details>
+            <summary>Greitas patarimas</summary>
+            <div class="small">Jei nori geresnio vaizdo iš kelto, stok dešinėje pusėje plaukiant į Valletta.</div>
+          </details>
+        </div>
+
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">10:00–13:00</div>
+          <div class="place">Valletta + Upper Barrakka Gardens</div>
+          <div class="desc">Pasivaikščiojimas senamiestyje, sienos, panorama ir trumpa kavos / pietų pertrauka.</div>
+          <div class="badges">
+            <span class="badge">Miesto centras</span>
+            <span class="badge warn">Drono čia geriau neskraidinti</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Valletta+Malta" target="_blank" rel="noopener">Valletta</a>
+            <a class="ghostbtn" href="https://maps.google.com/?q=Upper+Barrakka+Gardens" target="_blank" rel="noopener">Upper Barrakka Gardens</a>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">15:30–16:30</div>
+          <div class="place">St Peter's Pool</div>
+          <div class="desc">Geriausia vieta dronui šiame plane: turkio vanduo, uolos, labai geri top-down kadrai.</div>
+          <div class="badges">
+            <span class="badge drone">TOP drono spotas</span>
+            <span class="badge">Bolt ~15–18 €</span>
+            <span class="badge">~20–25 min</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=St+Peter%27s+Pool+Marsaxlokk" target="_blank" rel="noopener">Atidaryti vietą</a>
+          </div>
+          <details>
+            <summary>Ką filmuoti</summary>
+            <div class="small">Top-down virš vandens, reveal virš lagūnos, orbit aplink uolų kraštą. Čia gausi stipriausius kelionės kadrus.</div>
+          </details>
+        </div>
+
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">17:00–17:45</div>
+          <div class="place">Mdina</div>
+          <div class="desc">Trumpas sustojimas senamiestyje. Jei kelsi droną, geriau tik <b>už miesto sienų</b>.</div>
+          <div class="badges">
+            <span class="badge">Bolt ~16 €</span>
+            <span class="badge">~25 min</span>
+            <span class="badge drone">Skrydis tik išorėje</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Mdina+Malta" target="_blank" rel="noopener">Mdina</a>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">18:00–18:40</div>
+          <div class="place">Dingli Cliffs</div>
+          <div class="desc">Saulėlydžio vieta su dramatiškais uolų kadrais. Čia užsidaro diena gražiausiu vaizdu.</div>
+          <div class="badges">
+            <span class="badge drone">Saulėlydžio drono spotas</span>
+            <span class="badge">Bolt ~10 €</span>
+            <span class="badge">~10–15 min nuo Mdina</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Dingli+Cliffs+Malta" target="_blank" rel="noopener">Atidaryti vietą</a>
+          </div>
+          <details>
+            <summary>Ką filmuoti</summary>
+            <div class="small">Cliff reveal, lėtas pull-back shot, horizontali panorama su jūra. Jei vėjas stipresnis, laikyk trumpesnius ir saugesnius skrydžius.</div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <div id="day3" class="section-title">
+      <span>Kovo 10 – išvykimas</span>
+      <span class="section-sub">ankstyvas rytas</span>
+    </div>
+    <div class="card day">
+      <div class="day-head">
+        <h2>Išvykimo planas</h2>
+        <div class="day-meta">Skrydis 09:30</div>
+      </div>
+      <div class="timeline">
+        <div class="stop">
+          <div class="dot"></div>
+          <div class="time">06:45</div>
+          <div class="place">Bolt į Malta International Airport</div>
+          <div class="desc">Išvažiuoti anksti, kad nebūtų streso su oro uosto patikra.</div>
+          <div class="badges">
+            <span class="badge">Bolt ~18–22 €</span>
+            <span class="badge">~20 min</span>
+          </div>
+          <div class="actions">
+            <a class="mapbtn" href="https://maps.google.com/?q=Malta+International+Airport" target="_blank" rel="noopener">Oro uostas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tips" class="section-title">
+      <span>Drono patarimai</span>
+      <span class="section-sub">greitai ir aiškiai</span>
+    </div>
+    <div class="card day">
+      <ul class="list">
+        <li>Saugiausios vietos iš tavo maršruto: <b>Manoel Island</b>, <b>St Peter's Pool</b>, <b>Dingli Cliffs</b>.</li>
+        <li><b>Valletta centre</b> geriau neskraidinti dėl žmonių ir ribojimų.</li>
+        <li>Prie <b>Malta International Airport</b> drono nekelk.</li>
+        <li>Jei vėjas stiprus prie uolų, rinkis trumpesnį ir žemesnį skrydį.</li>
+        <li>Prieš pakeldamas droną visada pasižiūrėk DJI FlySafe / no-fly zoną programėlėje.</li>
+      </ul>
+      <div class="actions">
+        <a class="ghostbtn" href="https://maps.google.com/?q=Manoel+Island+Malta" target="_blank" rel="noopener">Manoel Island</a>
+        <a class="ghostbtn" href="https://maps.google.com/?q=St+Peter%27s+Pool+Marsaxlokk" target="_blank" rel="noopener">St Peter's Pool</a>
+        <a class="ghostbtn" href="https://maps.google.com/?q=Dingli+Cliffs+Malta" target="_blank" rel="noopener">Dingli Cliffs</a>
+      </div>
+    </div>
+
+    <div id="food" class="section-title">
+      <span>Vakarienė grįžus</span>
+      <span class="section-sub">arti viešbučio</span>
+    </div>
+    <div class="quick-grid">
+      <div class="card mini">
+        <h3>🍽️ Ta' Kris Restaurant</h3>
+        <p>Geras pasirinkimas tradiciniam Maltos maistui po dienos maršruto.</p>
+        <div class="actions" style="margin-top:10px">
+          <a class="mapbtn" href="https://maps.google.com/?q=Ta%27+Kris+Restaurant+Sliema" target="_blank" rel="noopener">Atidaryti</a>
+        </div>
+      </div>
+      <div class="card mini">
+        <h3>🌃 Vakarinis vaizdas</h3>
+        <p>Po vakarienės, jei dar norėsi, trumpas pasivaikščiojimas pakrante į Valletta šviesas.</p>
+        <div class="actions" style="margin-top:10px">
+          <a class="mapbtn" href="https://maps.google.com/?q=Manoel+Island+Malta" target="_blank" rel="noopener">Manoel Island</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Padaryta telefono naudojimui: dideli mygtukai, aiški dienos eiga ir normaliai rodomos lietuviškos raidės.
+    </div>
+  </div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js');
+  });
+}
+</script>
+</body>
+</html>
